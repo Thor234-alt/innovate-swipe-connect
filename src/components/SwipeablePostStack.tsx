@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import SwipeablePostCard from "./SwipeablePostCard";
 import SwipeActions from "./SwipeActions";
@@ -7,10 +8,9 @@ import { usePostLikes } from "@/hooks/usePosts";
 
 interface SwipeablePostStackProps {
   posts: Post[];
-  onDeletePost?: (postId: string) => Promise<void>;
 }
 
-const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts, onDeletePost }) => {
+const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [superLikesUsed, setSuperLikesUsed] = useState(0);
   const maxSuperLikes = 3;
@@ -128,7 +128,6 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts, onDelete
               onSwipeLeft={index === 0 ? handleSwipeLeft : undefined}
               onSwipeRight={index === 0 ? handleSwipeRight : undefined}
               onSuperLike={index === 0 ? handleSuperLike : undefined}
-              onDelete={onDeletePost}
               isTop={index === 0}
             />
           </div>

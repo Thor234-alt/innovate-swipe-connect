@@ -27,13 +27,19 @@ function getAvatarUrl(user: any) {
 
 export default function ProfilePage() {
   const { user } = useAuthUser();
-  const { posts, isLoading, createPost } = usePosts();
+  const { posts, isLoading, createPost, deletePost } = usePosts();
   const { likedPosts, isLoading: likedPostsLoading } = useLikedPosts();
   const [showCreatePost, setShowCreatePost] = useState(false);
 
   const handleCreatePost = async (data: { title: string; content: string }) => {
     await createPost.mutateAsync(data);
     setShowCreatePost(false);
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      await deletePost.mutateAsync(postId);
+    }
   };
 
   if (!user) {
@@ -114,7 +120,12 @@ export default function ProfilePage() {
                 ) : (
                   <div className="space-y-4">
                     {posts.map((post) => (
-                      <PostCard key={post.id} post={post} />
+                      <PostCard 
+                        key={post.id} 
+                        post={post} 
+                        onDelete={handleDeletePost}
+                        showDeleteButton={true}
+                      />
                     ))}
                   </div>
                 )}
@@ -136,7 +147,11 @@ export default function ProfilePage() {
                 ) : (
                   <div className="space-y-4">
                     {likedPosts.map((post) => (
-                      <PostCard key={post.id} post={post} />
+                      <PostCard 
+                        key={post.id} 
+                        post={post} 
+                        showDeleteButton={false}
+                      />
                     ))}
                   </div>
                 )}
