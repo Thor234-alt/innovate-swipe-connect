@@ -83,7 +83,7 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-6">
+    <div className="flex flex-col items-center space-y-4">
       {/* Posts Stack */}
       <div className="relative w-full max-w-md mx-auto" style={{ height: "500px" }}>
         {visiblePosts.map((post, index) => (
@@ -106,7 +106,7 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
         ))}
       </div>
 
-      {/* Swipe Actions */}
+      {/* Swipe Actions - moved closer to cards */}
       <SwipeActions
         onLeft={handleSwipeLeft}
         onRight={handleSwipeRight}
