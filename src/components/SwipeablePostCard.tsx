@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Share2, Eye, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Heart, Share2, Eye, ChevronLeft, ChevronRight, Star, MessageCircle } from "lucide-react";
 import { Post } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfiles";
-import { useAuthUser } from "@/hooks/useAuthUser";
 import HeartAnimation from "./HeartAnimation";
+import PostCommentsModal from "./PostCommentsModal";
 
 interface SwipeablePostCardProps {
   post: Post;
@@ -26,6 +26,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
   isTop,
 }) => {
   const [showHeartAnimation, setShowHeartAnimation] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const { profile } = useProfile(post.user_id);
 
   const formatDate = (dateString: string) => {
@@ -97,9 +98,20 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
             </p>
             
             <div className="flex items-center justify-between mt-auto">
-              <span className="text-xs text-muted-foreground">
-                By {getDisplayName()}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  By {getDisplayName()}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="p-1 h-auto text-muted-foreground hover:text-primary"
+                  onClick={() => setShowComments(true)}
+                  title="View comments"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                </Button>
+              </div>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -137,6 +149,12 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
       <HeartAnimation 
         show={showHeartAnimation} 
         onComplete={() => setShowHeartAnimation(false)} 
+      />
+
+      <PostCommentsModal
+        post={post}
+        open={showComments}
+        onClose={() => setShowComments(false)}
       />
     </>
   );
