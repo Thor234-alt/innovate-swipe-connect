@@ -4,27 +4,34 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { usePosts } from "@/hooks/usePosts";
 
 interface CreatePostModalProps {
   open: boolean;
   onClose: () => void;
+  onSubmit: (data: { title: string; content: string }) => Promise<void>;
 }
 
-export default function CreatePostModal({ open, onClose }: CreatePostModalProps) {
+export default function CreatePostModal({ open, onClose, onSubmit }: CreatePostModalProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const { createPost } = usePosts();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!title.trim() || !content.trim()) return;
     
-    await createPost.mutateAsync({ title, content });
-    setTitle("");
-    setContent("");
-    onClose();
+    setIsSubmitting(true);
+    try {
+      await onSubmit({ title, content });
+      setTitle("");
+      setContent("");
+      onClose();
+    } catch (error) {
+      console.error('Error submitting post:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -64,9 +71,9 @@ export default function CreatePostModal({ open, onClose }: CreatePostModalProps)
             </Button>
             <Button 
               type="submit" 
-              disabled={!title.trim() || !content.trim() || createPost.isPending}
+              disabled={!title.trim() || !content.trim() || isSubmitting}
             >
-              {createPost.isPending ? "Publishing..." : "Publish Post"}
+              {isSubmitting ? "Publishing..." : "Publish Post"}
             </Button>
           </DialogFooter>
         </form>
