@@ -50,12 +50,12 @@ export default function ProfilePage() {
   const avatarUrl = getAvatarUrl(user);
 
   return (
-    <div className="flex justify-center items-start min-h-[60vh] py-12 px-2">
-      <div className="max-w-4xl w-full space-y-6">
+    <div className="flex justify-center items-start min-h-[60vh] py-4 px-0 sm:py-12 sm:px-2 bg-gradient-to-br from-white to-blue-50">
+      <div className="w-full max-w-md sm:max-w-4xl space-y-4 sm:space-y-6 px-2 sm:px-0">
         {/* Profile Info Card */}
-        <Card className="bg-white/90 shadow-2xl border-primary/10">
-          <CardHeader className="flex flex-row items-center gap-4 pb-0">
-            <Avatar className="w-16 h-16">
+        <Card className="bg-white/90 shadow-2xl border-primary/10 rounded-xl">
+          <CardHeader className="flex flex-col sm:flex-row items-center gap-4 pb-0">
+            <Avatar className="w-20 h-20 sm:w-16 sm:h-16 mb-2 sm:mb-0">
               <AvatarImage src={avatarUrl} alt={displayName ?? "Profile"} />
               <AvatarFallback>
                 {displayName
@@ -66,54 +66,52 @@ export default function ProfilePage() {
                   .toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1">
-              <CardTitle className="mb-0">{displayName}</CardTitle>
-              <div className="font-normal text-muted-foreground text-sm">Your account details</div>
+            <div className="flex-1 text-center sm:text-left">
+              <CardTitle className="mb-0 text-lg sm:text-2xl">{displayName}</CardTitle>
+              <div className="font-normal text-muted-foreground text-xs sm:text-sm">Your account details</div>
             </div>
             <Button 
               onClick={() => setShowCreatePost(true)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 mt-2 sm:mt-0 text-sm sm:text-base w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" />
               New Post
             </Button>
           </CardHeader>
-          <CardContent className="space-y-6 pt-4">
+          <CardContent className="space-y-6 pt-4 px-2 sm:px-6">
             <div>
               <span className="text-xs text-muted-foreground block">Email</span>
-              <div className="font-bold">{user.email}</div>
+              <div className="font-bold text-sm sm:text-base break-words">{user.email}</div>
             </div>
           </CardContent>
         </Card>
 
         {/* Posts Section with Tabs */}
-        <Card className="bg-white/90 shadow-xl border-primary/10">
-          <CardHeader>
-            <CardTitle>Your Posts & Activity</CardTitle>
+        <Card className="bg-white/90 shadow-xl border-primary/10 rounded-xl">
+          <CardHeader className="px-2 sm:px-6">
+            <CardTitle className="text-base sm:text-xl">Your Posts & Activity</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="posts" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="posts" className="flex items-center gap-2">
+          <CardContent className="p-0">
+            <Tabs defaultValue="posts" className="w-full px-0 sm:px-6">
+              <TabsList className="grid w-full grid-cols-2 rounded-none border-b mb-2 sm:mb-4">
+                <TabsTrigger value="posts" className="flex items-center gap-2 justify-center text-xs sm:text-base py-2">
                   Your Posts
-                  <span className="text-sm">({posts.length})</span>
+                  <span className="text-xs sm:text-sm">({posts.length})</span>
                 </TabsTrigger>
-                <TabsTrigger value="liked" className="flex items-center gap-2">
+                <TabsTrigger value="liked" className="flex items-center gap-2 justify-center text-xs sm:text-base py-2">
                   <Heart className="w-4 h-4" />
                   Liked Posts
-                  <span className="text-sm">({likedPosts.length})</span>
+                  <span className="text-xs sm:text-sm">({likedPosts.length})</span>
                 </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="posts">
+              <TabsContent value="posts" className="px-2 py-2 sm:px-6 sm:py-4">
                 {isLoading ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    Loading your posts...
-                  </div>
+                  <div className="text-center py-6 text-muted-foreground text-base">Loading your posts...</div>
                 ) : posts.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <p className="mb-4">You haven't created any posts yet.</p>
-                    <Button onClick={() => setShowCreatePost(true)}>
+                  <div className="text-center py-6 text-muted-foreground">
+                    <p className="mb-4 text-xs sm:text-base">You haven't created any posts yet.</p>
+                    <Button onClick={() => setShowCreatePost(true)} className="w-full sm:w-auto text-sm">
                       Create Your First Post
                     </Button>
                   </div>
@@ -125,22 +123,21 @@ export default function ProfilePage() {
                         post={post} 
                         onDelete={handleDeletePost}
                         showDeleteButton={true}
+                        className="rounded-lg"
                       />
                     ))}
                   </div>
                 )}
               </TabsContent>
               
-              <TabsContent value="liked">
+              <TabsContent value="liked" className="px-2 py-2 sm:px-6 sm:py-4">
                 {likedPostsLoading ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    Loading liked posts...
-                  </div>
+                  <div className="text-center py-6 text-muted-foreground text-base">Loading liked posts...</div>
                 ) : likedPosts.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
+                  <div className="text-center py-6 text-muted-foreground">
                     <Heart className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
-                    <p className="mb-4">You haven't liked any posts yet.</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="mb-4 text-xs sm:text-base">You haven't liked any posts yet.</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Start exploring and like posts that interest you!
                     </p>
                   </div>
@@ -151,6 +148,7 @@ export default function ProfilePage() {
                         key={post.id} 
                         post={post} 
                         showDeleteButton={false}
+                        className="rounded-lg"
                       />
                     ))}
                   </div>
