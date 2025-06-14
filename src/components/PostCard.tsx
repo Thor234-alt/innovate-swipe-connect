@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Heart, Share2, Eye, Trash2, MessageCircle } from "lucide-react";
 import { Post } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfiles";
@@ -12,6 +13,20 @@ interface PostCardProps {
   onDelete?: (postId: string) => Promise<void>;
   showDeleteButton?: boolean;
 }
+
+const IDEA_TYPE_LABELS = {
+  'concept': 'Concept',
+  'mvp': 'MVP Ready',
+  'imaginable': 'Imaginable',
+  'futuristic': 'Futuristic',
+};
+
+const IDEA_TYPE_COLORS = {
+  'concept': 'bg-blue-100 text-blue-800',
+  'mvp': 'bg-green-100 text-green-800',
+  'imaginable': 'bg-purple-100 text-purple-800',
+  'futuristic': 'bg-orange-100 text-orange-800',
+};
 
 const PostCard: React.FC<PostCardProps> = ({ 
   post, 
@@ -84,6 +99,19 @@ const PostCard: React.FC<PostCardProps> = ({
               )}
             </div>
           </div>
+          
+          {/* Idea Type Badge */}
+          {post.idea_type && (
+            <div className="mb-2">
+              <Badge 
+                variant="secondary" 
+                className={`${IDEA_TYPE_COLORS[post.idea_type as keyof typeof IDEA_TYPE_COLORS] || 'bg-gray-100 text-gray-800'} text-xs`}
+              >
+                {IDEA_TYPE_LABELS[post.idea_type as keyof typeof IDEA_TYPE_LABELS] || post.idea_type}
+              </Badge>
+            </div>
+          )}
+          
           <CardTitle className="text-lg font-bold leading-tight">
             {post.title}
           </CardTitle>
@@ -103,6 +131,19 @@ const PostCard: React.FC<PostCardProps> = ({
           <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-4">
             {post.content}
           </p>
+          
+          {/* Tags */}
+          {post.tags && post.tags.length > 0 && (
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-1">
+                {post.tags.map((tag, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
           
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">

@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Heart, Share2, Eye, ChevronLeft, ChevronRight, Star, MessageCircle } from "lucide-react";
 import { Post } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfiles";
@@ -18,6 +19,20 @@ interface SwipeablePostCardProps {
   style?: React.CSSProperties;
   isTop?: boolean;
 }
+
+const IDEA_TYPE_LABELS = {
+  'concept': 'Concept',
+  'mvp': 'MVP Ready',
+  'imaginable': 'Imaginable',
+  'futuristic': 'Futuristic',
+};
+
+const IDEA_TYPE_COLORS = {
+  'concept': 'bg-blue-100 text-blue-800',
+  'mvp': 'bg-green-100 text-green-800',
+  'imaginable': 'bg-purple-100 text-purple-800',
+  'futuristic': 'bg-orange-100 text-orange-800',
+};
 
 const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
   post,
@@ -135,6 +150,19 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
                 </span>
               </div>
             </div>
+            
+            {/* Idea Type Badge */}
+            {post.idea_type && (
+              <div className="mb-2">
+                <Badge 
+                  variant="secondary" 
+                  className={`${IDEA_TYPE_COLORS[post.idea_type as keyof typeof IDEA_TYPE_COLORS] || 'bg-gray-100 text-gray-800'} text-xs`}
+                >
+                  {IDEA_TYPE_LABELS[post.idea_type as keyof typeof IDEA_TYPE_LABELS] || post.idea_type}
+                </Badge>
+              </div>
+            )}
+            
             <CardTitle className="text-lg sm:text-xl font-bold leading-tight">
               {post.title}
             </CardTitle>
@@ -146,16 +174,34 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
                 <img 
                   src={post.image_url} 
                   alt={post.title}
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="w-full h-40 object-cover rounded-lg"
                 />
               </div>
             )}
             
             <div className="flex-1 overflow-hidden">
-              <p className="text-muted-foreground text-sm leading-relaxed mb-6 overflow-y-auto max-h-48">
+              <p className="text-muted-foreground text-sm leading-relaxed mb-4 overflow-y-auto max-h-32">
                 {post.content}
               </p>
             </div>
+            
+            {/* Tags */}
+            {post.tags && post.tags.length > 0 && (
+              <div className="mb-4 flex-shrink-0">
+                <div className="flex flex-wrap gap-1">
+                  {post.tags.slice(0, 3).map((tag, index) => (
+                    <Badge key={index} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                  {post.tags.length > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{post.tags.length - 3} more
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            )}
             
             <div className="flex items-center justify-between mt-auto pt-4 flex-shrink-0">
               <div className="flex items-center gap-2">

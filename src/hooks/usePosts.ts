@@ -11,6 +11,8 @@ export interface Post {
   updated_at: string;
   user_id: string;
   image_url?: string;
+  tags?: string[];
+  idea_type?: string;
   analytics?: {
     views: number;
     likes: number;
@@ -59,12 +61,25 @@ export function usePosts() {
   });
 
   const createPost = useMutation({
-    mutationFn: async ({ title, content, image_url }: { title: string; content: string; image_url?: string }) => {
+    mutationFn: async ({ title, content, image_url, tags, idea_type }: { 
+      title: string; 
+      content: string; 
+      image_url?: string;
+      tags?: string[];
+      idea_type?: string;
+    }) => {
       if (!user?.id) throw new Error('User not authenticated');
       
       const { data, error } = await supabase
         .from('posts')
-        .insert({ title, content, user_id: user.id, image_url })
+        .insert({ 
+          title, 
+          content, 
+          user_id: user.id, 
+          image_url,
+          tags: tags || [],
+          idea_type: idea_type || 'concept'
+        })
         .select()
         .single();
 
