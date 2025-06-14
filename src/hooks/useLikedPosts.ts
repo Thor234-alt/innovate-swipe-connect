@@ -16,8 +16,13 @@ export function useLikedPosts() {
         .from('post_likes')
         .select(`
           post_id,
-          posts (
-            *,
+          posts!inner (
+            id,
+            title,
+            content,
+            created_at,
+            updated_at,
+            user_id,
             post_analytics (
               views,
               likes,
@@ -31,7 +36,12 @@ export function useLikedPosts() {
       if (error) throw error;
       
       return data.map(like => ({
-        ...like.posts,
+        id: like.posts.id,
+        title: like.posts.title,
+        content: like.posts.content,
+        created_at: like.posts.created_at,
+        updated_at: like.posts.updated_at,
+        user_id: like.posts.user_id,
         analytics: like.posts.post_analytics?.[0] || { views: 0, likes: 0, shares: 0 }
       })) as Post[];
     },

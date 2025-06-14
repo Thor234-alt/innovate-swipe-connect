@@ -4,6 +4,7 @@ import { useAuthUser } from "@/hooks/useAuthUser";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Heart } from "lucide-react";
 import { usePosts } from "@/hooks/usePosts";
 import { useLikedPosts } from "@/hooks/useLikedPosts";
@@ -26,10 +27,14 @@ function getAvatarUrl(user: any) {
 
 export default function ProfilePage() {
   const { user } = useAuthUser();
-  const { posts, isLoading } = usePosts();
+  const { posts, isLoading, createPost } = usePosts();
   const { likedPosts, isLoading: likedPostsLoading } = useLikedPosts();
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [activeTab, setActiveTab] = useState<'posts' | 'liked'>('posts');
+
+  const handleCreatePost = async (data: { title: string; content: string }) => {
+    await createPost.mutateAsync(data);
+    setShowCreatePost(false);
+  };
 
   if (!user) {
     return <div className="p-8 text-center">No user details found.</div>;
@@ -78,81 +83,72 @@ export default function ProfilePage() {
         {/* Posts Section with Tabs */}
         <Card className="bg-white/90 shadow-xl border-primary/10">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant={activeTab === 'posts' ? 'default' : 'outline'}
-                  onClick={() => setActiveTab('posts')}
-                  className="flex items-center gap-2"
-                >
-                  Your Posts
-                  <span className="text-sm">
-                    ({posts.length})
-                  </span>
-                </Button>
-                <Button
-                  variant={activeTab === 'liked' ? 'default' : 'outline'}
-                  onClick={() => setActiveTab('liked')}
-                  className="flex items-center gap-2"
-                >
-                  <Heart className="w-4 h-4" />
-                  Liked Posts
-                  <span className="text-sm">
-                    ({likedPosts.length})
-                  </span>
-                </Button>
-              </div>
-            </div>
+            <CardTitle>Your Posts & Activity</CardTitle>
           </CardHeader>
           <CardContent>
-            {activeTab === 'posts' ? (
-              // Your Posts Tab
-              isLoading ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  Loading your posts...
-                </div>
-              ) : posts.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <p className="mb-4">You haven't created any posts yet.</p>
-                  <Button onClick={() => setShowCreatePost(true)}>
-                    Create Your First Post
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {posts.map((post) => (
-                    <PostCard key={post.id} post={post} />
-                  ))}
-                </div>
-              )
-            ) : (
-              // Liked Posts Tab
-              likedPostsLoading ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  Loading liked posts...
-                </div>
-              ) : likedPosts.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Heart className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
-                  <p className="mb-4">You haven't liked any posts yet.</p>
-                  <p className="text-sm text-muted-foreground">
-                    Start exploring and like posts that interest you!
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {likedPosts.map((post) => (
-                    <PostCard key={post.id} post={post} />
-                  ))}
-                </div>
-              )
-            )}
+            <Tabs defaultValue="posts" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="posts" className="flex items-center gap-2">
+                  Your Posts
+                  <span className="text-sm">({posts.length})</span>
+                </TabsTrigger>
+                <TabsTrigger value="liked" className="flex items-center gap-2">
+                  <Heart className="w-4 h-4" />
+                  Liked Posts
+                  <span className="text-sm">({likedPosts.length})</span>
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="posts">
+                {isLoading ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Loading your posts...
+                  </div>
+                ) : posts.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p className="mb-4">You haven't created any posts yet.</p>
+                    <Button onClick={() => setShowCreatePost(true)}>
+                      Create Your First Post
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {posts.map((post) => (
+                      <PostCard key={post.id} post={post} />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="liked">
+                {likedPostsLoading ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Loading liked posts...
+                  </div>
+                ) : likedPosts.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Heart className="w-12 h-12 mx-auto mb-4 text-muted-foreground/30" />
+                    <p className="mb-4">You haven't liked any posts yet.</p>
+                    <p className="text-sm text-muted-foreground">
+                      Start exploring and like posts that interest you!
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {likedPosts.map((post) => (
+                      <PostCard key={post.id} post={post} />
+                    ))}
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
 
         <CreatePostModal 
           open={showCreatePost} 
           onClose={() => setShowCreatePost(false)} 
+          onSubmit={handleCreatePost}
         />
       </div>
     </div>
