@@ -37,30 +37,33 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
 
   const threshold = 120; // px threshold for swipe
 
-  const bind = useDrag(({ down, movement: [mx], velocity: [vx], direction: [dx], last }) => {
-    // Move card
-    if (!isTop) return;
-    x.set(down ? mx : 0);
+  // Make sure useDrag returns a callable function
+  const bind = useDrag(
+    ({ down, movement: [mx], velocity: [vx], direction: [dx], last }) => {
+      // Move card
+      if (!isTop) return;
+      x.set(down ? mx : 0);
 
-    if (last) {
-      if (mx > threshold || (vx > 0.6 && dx > 0)) {
-        // Swipe right
-        controls.start({ x: 500, opacity: 0, rotate: 12, transition: { duration: 0.35 } }).then(() => {
-          x.set(0);
-          onSwipeRight?.();
-        });
-      } else if (mx < -threshold || (vx > 0.6 && dx < 0)) {
-        // Swipe left
-        controls.start({ x: -500, opacity: 0, rotate: -12, transition: { duration: 0.35 } }).then(() => {
-          x.set(0);
-          onSwipeLeft?.();
-        });
-      } else {
-        // Restore to center
-        controls.start({ x: 0, rotate: 0, opacity: 1, transition: { duration: 0.25 } });
+      if (last) {
+        if (mx > threshold || (vx > 0.6 && dx > 0)) {
+          // Swipe right
+          controls.start({ x: 500, opacity: 0, rotate: 12, transition: { duration: 0.35 } }).then(() => {
+            x.set(0);
+            onSwipeRight?.();
+          });
+        } else if (mx < -threshold || (vx > 0.6 && dx < 0)) {
+          // Swipe left
+          controls.start({ x: -500, opacity: 0, rotate: -12, transition: { duration: 0.35 } }).then(() => {
+            x.set(0);
+            onSwipeLeft?.();
+          });
+        } else {
+          // Restore to center
+          controls.start({ x: 0, rotate: 0, opacity: 1, transition: { duration: 0.25 } });
+        }
       }
     }
-  });
+  );
 
   const handleLike = () => {
     setShowHeartAnimation(true);
@@ -105,7 +108,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
         animate={controls}
-        {...(isTop ? { ...bind() } : {})}
+        {...(isTop ? bind() : {})}
         drag={false}
         whileTap={isTop ? { scale: 0.97 } : undefined}
       >
