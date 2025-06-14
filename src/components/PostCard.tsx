@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { Heart, MessageCircle, Share, Eye, Reply } from "lucide-react";
 import { Post, useComments, usePostLikes } from "@/hooks/usePosts";
 import { formatDistanceToNow } from "date-fns";
 import { useAuthUser } from "@/hooks/useAuthUser";
+import { useProfile } from "@/hooks/useProfiles";
 
 interface PostCardProps {
   post: Post;
@@ -20,8 +20,14 @@ export default function PostCard({ post }: PostCardProps) {
   const { comments, addComment } = useComments(post.id);
   const { toggleLike } = usePostLikes();
   const { user } = useAuthUser();
+  const { profile } = useProfile(post.user_id);
 
   const isPostCreator = user?.id === post.user_id;
+
+  const getDisplayName = () => {
+    if (profile?.full_name) return profile.full_name;
+    return `User ${post.user_id.slice(0, 8)}...`;
+  };
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
@@ -54,12 +60,23 @@ export default function PostCard({ post }: PostCardProps) {
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="text-lg">{post.title}</CardTitle>
-        <div className="text-sm text-muted-foreground">
-          {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+        <div className="text-sm text-muted-foreground flex items-center justify-between">
+          <span>{formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}</span>
+          <span>By {getDisplayName()}</span>
         </div>
       </CardHeader>
       
       <CardContent>
+        {post.image_url && (
+          <div className="mb-4">
+            <img 
+              src={post.image_url} 
+              alt={post.title}
+              className="w-full h-64 object-cover rounded-lg"
+            />
+          </div>
+        )}
+        
         <p className="text-sm leading-relaxed mb-4">{post.content}</p>
         
         {/* Analytics */}

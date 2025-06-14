@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthUser } from "./useAuthUser";
@@ -11,6 +10,7 @@ export interface Post {
   created_at: string;
   updated_at: string;
   user_id: string;
+  image_url?: string;
   analytics?: {
     views: number;
     likes: number;
@@ -59,12 +59,12 @@ export function usePosts() {
   });
 
   const createPost = useMutation({
-    mutationFn: async ({ title, content }: { title: string; content: string }) => {
+    mutationFn: async ({ title, content, image_url }: { title: string; content: string; image_url?: string }) => {
       if (!user?.id) throw new Error('User not authenticated');
       
       const { data, error } = await supabase
         .from('posts')
-        .insert({ title, content, user_id: user.id })
+        .insert({ title, content, user_id: user.id, image_url })
         .select()
         .single();
 
@@ -73,6 +73,7 @@ export function usePosts() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['all-posts'] });
       toast({ title: "Post created successfully!" });
     },
     onError: (error) => {
@@ -186,6 +187,7 @@ export function usePostLikes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['all-posts'] });
     },
     onError: (error) => {
       toast({ 

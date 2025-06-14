@@ -16,7 +16,7 @@ const AppHome = () => {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const queryClient = useQueryClient();
 
-  const handleCreatePost = async (data: { title: string; content: string }) => {
+  const handleCreatePost = async (data: { title: string; content: string; image_url?: string }) => {
     await createPost.mutateAsync(data);
     setShowCreatePost(false);
     // Invalidate all posts to refresh the list
