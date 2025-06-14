@@ -8,15 +8,19 @@ import SwipeablePostStack from "@/components/SwipeablePostStack";
 import CreatePostModal from "@/components/CreatePostModal";
 import { usePosts } from "@/hooks/usePosts";
 import { toast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AppHome = () => {
   const { posts: allPosts, isLoading } = useAllPosts();
   const { createPost } = usePosts();
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleCreatePost = async (data: { title: string; content: string }) => {
     await createPost.mutateAsync(data);
     setShowCreatePost(false);
+    // Invalidate all posts to refresh the list
+    queryClient.invalidateQueries({ queryKey: ['all-posts'] });
   };
 
   return (

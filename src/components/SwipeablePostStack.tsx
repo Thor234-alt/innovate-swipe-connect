@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import SwipeablePostCard from "./SwipeablePostCard";
 import SwipeActions from "./SwipeActions";
 import { Post } from "@/hooks/usePosts";
 import { toast } from "@/hooks/use-toast";
+import { usePostLikes } from "@/hooks/usePosts";
 
 interface SwipeablePostStackProps {
   posts: Post[];
@@ -13,6 +13,7 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [superLikesUsed, setSuperLikesUsed] = useState(0);
   const maxSuperLikes = 3;
+  const { toggleLike } = usePostLikes();
 
   const handleSwipeLeft = () => {
     toast({
@@ -23,16 +24,29 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
     nextPost();
   };
 
-  const handleSwipeRight = () => {
-    toast({
-      title: "Liked!",
-      description: "You liked this post",
-      duration: 1500,
-    });
+  const handleSwipeRight = async () => {
+    const currentPost = posts[currentIndex];
+    if (currentPost) {
+      try {
+        await toggleLike.mutateAsync(currentPost.id);
+        toast({
+          title: "Liked!",
+          description: "You liked this post and it's saved to your profile",
+          duration: 1500,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to like the post",
+          variant: "destructive",
+          duration: 1500,
+        });
+      }
+    }
     nextPost();
   };
 
-  const handleSuperLike = () => {
+  const handleSuperLike = async () => {
     if (superLikesUsed >= maxSuperLikes) {
       toast({
         title: "No more super likes",
@@ -43,12 +57,25 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
       return;
     }
     
-    setSuperLikesUsed(prev => prev + 1);
-    toast({
-      title: "Super Liked! ⭐",
-      description: "You super liked this post",
-      duration: 1500,
-    });
+    const currentPost = posts[currentIndex];
+    if (currentPost) {
+      try {
+        await toggleLike.mutateAsync(currentPost.id);
+        setSuperLikesUsed(prev => prev + 1);
+        toast({
+          title: "Super Liked! ⭐",
+          description: "You super liked this post and it's saved to your profile",
+          duration: 1500,
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to super like the post",
+          variant: "destructive",
+          duration: 1500,
+        });
+      }
+    }
     nextPost();
   };
 
