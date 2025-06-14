@@ -8,6 +8,7 @@ import LandingPage from "./pages/LandingPage";
 import AppHome from "./pages/AppHome";
 import NotFound from "./pages/NotFound";
 import AppHeader from "@/components/AppHeader";
+import ProfilePage from "@/pages/ProfilePage";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { Suspense } from "react";
 
@@ -21,6 +22,13 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   if (!session) return <Navigate to="/" state={{ from: location }} replace />;
   return <>{children}</>;
 }
+
+const AppLayout = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <AppHeader />
+    {children}
+  </>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -37,10 +45,21 @@ const App = () => (
             path="/app"
             element={
               <RequireAuth>
-                <AppHeader />
-                <Suspense fallback={<div className="p-8">Loading...</div>}>
-                  <AppHome />
-                </Suspense>
+                <AppLayout>
+                  <Suspense fallback={<div className="p-8">Loading...</div>}>
+                    <AppHome />
+                  </Suspense>
+                </AppLayout>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <AppLayout>
+                  <ProfilePage />
+                </AppLayout>
               </RequireAuth>
             }
           />

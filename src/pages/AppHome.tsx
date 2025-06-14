@@ -2,7 +2,8 @@
 // Main MVP Swiping Experience for Idea Tinder
 
 import React, { useState } from "react";
-import Header from "@/components/Header";
+// Remove duplicate Header import
+// import Header from "@/components/Header";
 import IdeaCard from "@/components/IdeaCard";
 import SwipeActions from "@/components/SwipeActions";
 import PostIdeaModal from "@/components/PostIdeaModal";
@@ -58,7 +59,7 @@ const Index = () => {
 
   return (
     <div className="bg-gradient-to-br from-white to-blue-50 min-h-screen flex flex-col">
-      <Header onShowSaved={() => setShowSaved(true)} onShowPost={() => setShowPost(true)} />
+      {/* AppHeader is now handled globally, so no navbar here */}
       <main className="flex flex-col items-center justify-center flex-1 px-4">
         <div className="flex flex-col items-center justify-center mt-8 w-full">
           <div className="h-[420px] flex items-center justify-center relative w-full max-w-lg">
