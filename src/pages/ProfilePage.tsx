@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -123,7 +122,6 @@ export default function ProfilePage() {
                         post={post} 
                         onDelete={handleDeletePost}
                         showDeleteButton={true}
-                        className="rounded-lg"
                       />
                     ))}
                   </div>
@@ -148,7 +146,6 @@ export default function ProfilePage() {
                         key={post.id} 
                         post={post} 
                         showDeleteButton={false}
-                        className="rounded-lg"
                       />
                     ))}
                   </div>
