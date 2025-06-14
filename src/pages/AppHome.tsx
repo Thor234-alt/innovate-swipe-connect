@@ -12,7 +12,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const AppHome = () => {
   const { posts: allPosts, isLoading } = useAllPosts();
-  const { createPost } = usePosts();
+  const { createPost, deletePost } = usePosts();
   const [showCreatePost, setShowCreatePost] = useState(false);
   const queryClient = useQueryClient();
 
@@ -21,6 +21,12 @@ const AppHome = () => {
     setShowCreatePost(false);
     // Invalidate all posts to refresh the list
     queryClient.invalidateQueries({ queryKey: ['all-posts'] });
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      await deletePost.mutateAsync(postId);
+    }
   };
 
   return (
@@ -61,7 +67,10 @@ const AppHome = () => {
               </CardContent>
             </Card>
           ) : (
-            <SwipeablePostStack posts={allPosts} />
+            <SwipeablePostStack 
+              posts={allPosts} 
+              onDeletePost={handleDeletePost}
+            />
           )}
         </div>
 

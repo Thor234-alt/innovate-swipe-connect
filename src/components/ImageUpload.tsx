@@ -10,9 +10,10 @@ interface ImageUploadProps {
   onImageUploaded: (url: string) => void;
   currentImage?: string;
   onImageRemoved: () => void;
+  disabled?: boolean;
 }
 
-export default function ImageUpload({ onImageUploaded, currentImage, onImageRemoved }: ImageUploadProps) {
+export default function ImageUpload({ onImageUploaded, currentImage, onImageRemoved, disabled = false }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuthUser();
@@ -78,6 +79,7 @@ export default function ImageUpload({ onImageUploaded, currentImage, onImageRemo
             size="sm"
             className="absolute top-2 right-2"
             onClick={onImageRemoved}
+            disabled={disabled}
           >
             <X className="w-4 h-4" />
           </Button>
@@ -91,7 +93,7 @@ export default function ImageUpload({ onImageUploaded, currentImage, onImageRemo
               variant="outline"
               size="sm"
               onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
+              disabled={uploading || disabled}
             >
               <Upload className="w-4 h-4 mr-2" />
               {uploading ? "Uploading..." : "Choose Image"}
@@ -105,6 +107,7 @@ export default function ImageUpload({ onImageUploaded, currentImage, onImageRemo
         accept="image/*"
         onChange={handleFileSelect}
         className="hidden"
+        disabled={disabled}
       />
     </div>
   );

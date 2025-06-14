@@ -33,6 +33,7 @@ export default function CreatePostModal({ open, onClose, onSubmit }: CreatePostM
       setTitle("");
       setContent("");
       setImageUrl("");
+      onClose();
     } finally {
       setIsSubmitting(false);
     }
@@ -85,6 +86,7 @@ export default function CreatePostModal({ open, onClose, onSubmit }: CreatePostM
               onImageUploaded={setImageUrl}
               currentImage={imageUrl}
               onImageRemoved={() => setImageUrl("")}
+              disabled={isSubmitting}
             />
           </div>
 

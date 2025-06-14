@@ -85,10 +85,37 @@ export function usePosts() {
     }
   });
 
+  const deletePost = useMutation({
+    mutationFn: async (postId: string) => {
+      if (!user?.id) throw new Error('User not authenticated');
+      
+      const { error } = await supabase
+        .from('posts')
+        .delete()
+        .eq('id', postId)
+        .eq('user_id', user.id); // Ensure only the owner can delete
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user-posts'] });
+      queryClient.invalidateQueries({ queryKey: ['all-posts'] });
+      toast({ title: "Post deleted successfully!" });
+    },
+    onError: (error) => {
+      toast({ 
+        title: "Error deleting post", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    }
+  });
+
   return {
     posts: posts || [],
     isLoading,
-    createPost
+    createPost,
+    deletePost
   };
 }
 

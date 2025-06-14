@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Share2, Eye, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Heart, Share2, Eye, ChevronLeft, ChevronRight, Star, Trash2 } from "lucide-react";
 import { Post } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfiles";
+import { useAuthUser } from "@/hooks/useAuthUser";
 import HeartAnimation from "./HeartAnimation";
 
 interface SwipeablePostCardProps {
@@ -12,6 +13,7 @@ interface SwipeablePostCardProps {
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
   onSuperLike?: () => void;
+  onDelete?: (postId: string) => void;
   style?: React.CSSProperties;
   isTop?: boolean;
 }
@@ -21,11 +23,13 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
   onSwipeLeft,
   onSwipeRight,
   onSuperLike,
+  onDelete,
   style,
   isTop,
 }) => {
   const [showHeartAnimation, setShowHeartAnimation] = useState(false);
   const { profile } = useProfile(post.user_id);
+  const { user } = useAuthUser();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -44,6 +48,8 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
     if (profile?.full_name) return profile.full_name;
     return `User ${post.user_id.slice(0, 8)}...`;
   };
+
+  const isOwner = user?.id === post.user_id;
 
   return (
     <>
@@ -73,6 +79,16 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
                   <Share2 className="h-3 w-3" />
                   {post.analytics?.shares || 0}
                 </span>
+                {isOwner && onDelete && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="p-1 h-auto text-destructive hover:text-destructive"
+                    onClick={() => onDelete(post.id)}
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                )}
               </div>
             </div>
             <CardTitle className="text-lg sm:text-xl font-bold leading-tight">
