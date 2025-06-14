@@ -119,9 +119,9 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
     <>
       <motion.div
         ref={cardRef}
-        className={`w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl border border-border p-6 pb-6 relative select-none transition-all duration-300
+        className={`w-full mx-auto bg-white rounded-2xl shadow-2xl border border-border p-3 sm:p-6 pb-4 sm:pb-6 relative select-none transition-all duration-300
         ${isTop ? "hover:shadow-3xl hover:-translate-y-0.5 z-10" : "opacity-80 scale-95 z-0"}`}
-        style={{ ...style, x, height: "520px" }}
+        style={{ ...style, x, height: "440px" }}
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
         animate={controls}
@@ -130,12 +130,12 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
         whileTap={isTop ? { scale: 0.97 } : undefined}
       >
         <Card className="border-0 shadow-none p-0 bg-transparent h-full flex flex-col">
-          <CardHeader className="p-0 pb-4 flex-shrink-0">
+          <CardHeader className="p-0 pb-2 sm:pb-4 flex-shrink-0">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-muted-foreground">
                 {formatDate(post.created_at)}
               </span>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Eye className="h-3 w-3" />
                   {post.analytics?.views || 0}
@@ -163,31 +163,31 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
               </div>
             )}
             
-            <CardTitle className="text-lg sm:text-xl font-bold leading-tight">
+            <CardTitle className="text-base sm:text-lg font-bold leading-tight">
               {post.title}
             </CardTitle>
           </CardHeader>
           
           <CardContent className="p-0 flex-1 flex flex-col">
             {post.image_url && (
-              <div className="mb-4 flex-shrink-0">
+              <div className="mb-3 sm:mb-4 flex-shrink-0">
                 <img 
                   src={post.image_url} 
                   alt={post.title}
-                  className="w-full h-40 object-cover rounded-lg"
+                  className="w-full h-28 sm:h-32 object-cover rounded-lg"
                 />
               </div>
             )}
             
             <div className="flex-1 overflow-hidden">
-              <p className="text-muted-foreground text-sm leading-relaxed mb-4 overflow-y-auto max-h-32">
+              <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4 overflow-y-auto max-h-20 sm:max-h-24">
                 {post.content}
               </p>
             </div>
             
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
-              <div className="mb-4 flex-shrink-0">
+              <div className="mb-3 sm:mb-4 flex-shrink-0">
                 <div className="flex flex-wrap gap-1">
                   {post.tags.slice(0, 3).map((tag, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
@@ -203,7 +203,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
               </div>
             )}
             
-            <div className="flex items-center justify-between mt-auto pt-4 flex-shrink-0">
+            <div className="flex items-center justify-between mt-auto pt-2 sm:pt-4 flex-shrink-0">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-muted-foreground">
                   By {getDisplayName()}
@@ -215,36 +215,36 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
                   onClick={() => setShowComments(true)}
                   title="View comments"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1 sm:gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="p-2 rounded-full hover:bg-destructive/10 border-destructive/20"
+                  className="p-1.5 sm:p-2 rounded-full hover:bg-destructive/10 border-destructive/20"
                   aria-label="Pass"
                   onClick={handlePass}
                 >
-                  <ChevronLeft className="text-destructive h-4 w-4" />
+                  <ChevronLeft className="text-destructive h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="p-2 rounded-full hover:bg-primary/10 border-primary/20"
+                  className="p-1.5 sm:p-2 rounded-full hover:bg-primary/10 border-primary/20"
                   aria-label="Super Like"
                   onClick={handleSuperLike}
                 >
-                  <Star className="text-primary h-4 w-4" />
+                  <Star className="text-primary h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="p-2 rounded-full hover:bg-green-100 border-green-200"
+                  className="p-1.5 sm:p-2 rounded-full hover:bg-green-100 border-green-200"
                   aria-label="Like"
                   onClick={handleLike}
                 >
-                  <ChevronRight className="text-green-700 h-4 w-4" />
+                  <ChevronRight className="text-green-700 h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </div>
             </div>

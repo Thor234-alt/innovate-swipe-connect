@@ -90,9 +90,9 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
 
   if (posts.length === 0) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-xl font-semibold mb-2">No more posts</h3>
-        <p className="text-muted-foreground">
+      <div className="text-center py-8 sm:py-12 px-4">
+        <h3 className="text-lg sm:text-xl font-semibold mb-2">No more posts</h3>
+        <p className="text-muted-foreground text-sm sm:text-base">
           Check back later for new posts from the community!
         </p>
       </div>
@@ -101,9 +101,9 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
 
   if (currentIndex >= posts.length) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-xl font-semibold mb-2">That's all for now!</h3>
-        <p className="text-muted-foreground">
+      <div className="text-center py-8 sm:py-12 px-4">
+        <h3 className="text-lg sm:text-xl font-semibold mb-2">That's all for now!</h3>
+        <p className="text-muted-foreground text-sm sm:text-base">
           You've seen all available posts. Check back later for more!
         </p>
       </div>
@@ -111,15 +111,15 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4 max-w-lg mx-auto">
-      {/* Posts Stack */}
-      <div className="relative w-full" style={{ height: "520px" }}>
+    <div className="flex flex-col items-center space-y-3 sm:space-y-4 w-full max-w-sm sm:max-w-lg mx-auto px-2">
+      {/* Posts Stack - mobile optimized */}
+      <div className="relative w-full" style={{ height: "440px" }}>
         {visiblePosts.map((post, index) => (
           <div
             key={post.id}
             className="absolute inset-0 transition-all duration-300 ease-out"
             style={{
-              transform: `translateY(${index * 8}px) scale(${1 - index * 0.05})`,
+              transform: `translateY(${index * 6}px) scale(${1 - index * 0.04})`,
               zIndex: visiblePosts.length - index,
             }}
           >
@@ -134,8 +134,8 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
         ))}
       </div>
 
-      {/* Swipe Actions - positioned closer to the post card */}
-      <div className="w-full flex justify-center -mt-2">
+      {/* Swipe Actions - positioned with better mobile spacing */}
+      <div className="w-full flex justify-center mt-2 sm:mt-4">
         <SwipeActions
           onLeft={handleSwipeLeft}
           onRight={handleSwipeRight}
@@ -144,9 +144,9 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
         />
       </div>
 
-      {/* Progress Indicator - centered and styled */}
-      <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
-        <div className="flex items-center gap-4">
+      {/* Progress Indicator - mobile optimized */}
+      <div className="flex flex-col items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground bg-white/80 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full shadow-sm mt-2">
+        <div className="flex items-center gap-2 sm:gap-4">
           <span className="font-medium">{currentIndex + 1} / {posts.length}</span>
           <span className="text-xs">Super Likes: {superLikesUsed}/{maxSuperLikes}</span>
         </div>
