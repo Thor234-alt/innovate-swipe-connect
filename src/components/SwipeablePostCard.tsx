@@ -37,7 +37,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
 
   const threshold = 120; // px threshold for swipe
 
-  // Make sure useDrag returns a callable function
+  // useDrag returns an object with event handlers, not a function
   const bind = useDrag(
     ({ down, movement: [mx], velocity: [vx], direction: [dx], last }) => {
       // Move card
@@ -108,7 +108,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
         animate={controls}
-        {...(isTop ? bind() : {})}
+        {...(isTop ? bind : {})}
         drag={false}
         whileTap={isTop ? { scale: 0.97 } : undefined}
       >
