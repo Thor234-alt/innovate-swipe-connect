@@ -106,7 +106,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
         ref={cardRef}
         className={`w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl border border-border p-6 pb-6 relative select-none transition-all duration-300
         ${isTop ? "hover:shadow-3xl hover:-translate-y-0.5 z-10" : "opacity-80 scale-95 z-0"}`}
-        style={{ ...style, x, height: "580px" }}
+        style={{ ...style, x, height: "520px" }}
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
         animate={controls}
