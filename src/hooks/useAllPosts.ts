@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Post } from "./usePosts";
 import { seedIdeas } from "@/data/seedIdeas";
-import { realTestIdeas } from "@/data/realTestIdeas";
 
 export function useAllPosts() {
   const { data: posts, isLoading } = useQuery({
@@ -30,12 +29,12 @@ export function useAllPosts() {
 
       // If no posts in database, return demo posts for better UX
       if (dbPosts.length === 0) {
-        return [...realTestIdeas, ...seedIdeas] as Post[];
+        return seedIdeas as Post[];
       }
 
       // If there are some posts but fewer than 10, mix in some demo posts
       if (dbPosts.length < 10) {
-        const additionalDemoPosts = [...realTestIdeas, ...seedIdeas].slice(0, 10 - dbPosts.length);
+        const additionalDemoPosts = seedIdeas.slice(0, 10 - dbPosts.length);
         return [...dbPosts, ...additionalDemoPosts] as Post[];
       }
 
