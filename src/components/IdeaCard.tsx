@@ -1,6 +1,6 @@
 
 import { Idea } from "@/data/demoIdeas";
-import { ChevronRight, ChevronLeft, Heart, Star } from "lucide-react";
+import { ChevronRight, ChevronLeft, Heart, Star, User } from "lucide-react";
 import React from "react";
 
 type Props = {
