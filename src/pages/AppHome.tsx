@@ -25,8 +25,8 @@ const AppHome = () => {
   return (
     <div className="bg-gradient-to-br from-white to-blue-50 min-h-screen">
       <main className="container mx-auto px-4 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-8">
+        {/* Header Section - centered and aligned */}
+        <div className="text-center mb-8 max-w-2xl mx-auto">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Discover Posts</h1>
           <p className="text-lg text-gray-600 mb-6">
             Swipe through posts from the community
@@ -40,15 +40,15 @@ const AppHome = () => {
           </Button>
         </div>
 
-        {/* Swipeable Posts */}
-        <div className="max-w-2xl mx-auto">
+        {/* Swipeable Posts - centered container */}
+        <div className="flex justify-center">
           {isLoading ? (
             <div className="text-center py-12">
               <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-primary" />
               <p className="text-muted-foreground">Loading posts...</p>
             </div>
           ) : allPosts.length === 0 ? (
-            <Card className="bg-white/90 shadow-xl border-primary/10">
+            <Card className="bg-white/90 shadow-xl border-primary/10 max-w-md">
               <CardContent className="text-center py-12">
                 <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
                 <p className="text-muted-foreground mb-4">

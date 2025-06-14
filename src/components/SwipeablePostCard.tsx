@@ -104,9 +104,9 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
     <>
       <motion.div
         ref={cardRef}
-        className={`w-[340px] md:w-[380px] lg:w-[440px] max-w-full mx-auto bg-white rounded-2xl shadow-2xl border border-border p-6 pb-4 relative select-none transition-all duration-300
+        className={`w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl border border-border p-6 pb-6 relative select-none transition-all duration-300
         ${isTop ? "hover:shadow-3xl hover:-translate-y-0.5 z-10" : "opacity-80 scale-95 z-0"}`}
-        style={{ ...style, x }}
+        style={{ ...style, x, height: "580px" }}
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
         animate={controls}
@@ -114,8 +114,8 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
         drag={false}
         whileTap={isTop ? { scale: 0.97 } : undefined}
       >
-        <Card className="border-0 shadow-none p-0 bg-transparent">
-          <CardHeader className="p-0 pb-4">
+        <Card className="border-0 shadow-none p-0 bg-transparent h-full flex flex-col">
+          <CardHeader className="p-0 pb-4 flex-shrink-0">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-muted-foreground">
                 {formatDate(post.created_at)}
@@ -140,9 +140,9 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
             </CardTitle>
           </CardHeader>
           
-          <CardContent className="p-0">
+          <CardContent className="p-0 flex-1 flex flex-col">
             {post.image_url && (
-              <div className="mb-4">
+              <div className="mb-4 flex-shrink-0">
                 <img 
                   src={post.image_url} 
                   alt={post.title}
@@ -151,11 +151,13 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
               </div>
             )}
             
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-4">
-              {post.content}
-            </p>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-muted-foreground text-sm leading-relaxed mb-6 overflow-y-auto max-h-48">
+                {post.content}
+              </p>
+            </div>
             
-            <div className="flex items-center justify-between mt-auto">
+            <div className="flex items-center justify-between mt-auto pt-4 flex-shrink-0">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-muted-foreground">
                   By {getDisplayName()}

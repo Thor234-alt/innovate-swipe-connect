@@ -111,9 +111,9 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center space-y-6 max-w-lg mx-auto">
       {/* Posts Stack */}
-      <div className="relative w-full max-w-md mx-auto" style={{ height: "500px" }}>
+      <div className="relative w-full" style={{ height: "600px" }}>
         {visiblePosts.map((post, index) => (
           <div
             key={post.id}
@@ -134,19 +134,21 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
         ))}
       </div>
 
-      {/* Swipe Actions - moved closer to cards */}
-      <SwipeActions
-        onLeft={handleSwipeLeft}
-        onRight={handleSwipeRight}
-        onSuper={handleSuperLike}
-        superDisabled={superLikesUsed >= maxSuperLikes}
-      />
+      {/* Swipe Actions - positioned higher */}
+      <div className="w-full flex justify-center -mt-4">
+        <SwipeActions
+          onLeft={handleSwipeLeft}
+          onRight={handleSwipeRight}
+          onSuper={handleSuperLike}
+          superDisabled={superLikesUsed >= maxSuperLikes}
+        />
+      </div>
 
-      {/* Progress Indicator */}
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <span>{currentIndex + 1} / {posts.length}</span>
-        <div className="flex items-center gap-1 ml-4">
-          <span>Super Likes: {superLikesUsed}/{maxSuperLikes}</span>
+      {/* Progress Indicator - centered and styled */}
+      <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
+        <div className="flex items-center gap-4">
+          <span className="font-medium">{currentIndex + 1} / {posts.length}</span>
+          <span className="text-xs">Super Likes: {superLikesUsed}/{maxSuperLikes}</span>
         </div>
       </div>
     </div>
