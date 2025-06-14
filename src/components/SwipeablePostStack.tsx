@@ -7,9 +7,10 @@ import { usePostLikes } from "@/hooks/usePosts";
 
 interface SwipeablePostStackProps {
   posts: Post[];
+  onDeletePost?: (postId: string) => Promise<void>;
 }
 
-const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
+const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts, onDeletePost }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [superLikesUsed, setSuperLikesUsed] = useState(0);
   const maxSuperLikes = 3;
@@ -127,6 +128,7 @@ const SwipeablePostStack: React.FC<SwipeablePostStackProps> = ({ posts }) => {
               onSwipeLeft={index === 0 ? handleSwipeLeft : undefined}
               onSwipeRight={index === 0 ? handleSwipeRight : undefined}
               onSuperLike={index === 0 ? handleSuperLike : undefined}
+              onDelete={onDeletePost}
               isTop={index === 0}
             />
           </div>
