@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, RefreshCw } from "lucide-react";
 import { useAllPosts } from "@/hooks/useAllPosts";
-import PostCard from "@/components/PostCard";
+import SwipeablePostStack from "@/components/SwipeablePostStack";
 import CreatePostModal from "@/components/CreatePostModal";
 import { usePosts } from "@/hooks/usePosts";
 import { toast } from "@/hooks/use-toast";
@@ -26,7 +26,7 @@ const AppHome = () => {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Discover Posts</h1>
           <p className="text-lg text-gray-600 mb-6">
-            Explore and engage with posts from the community
+            Swipe through posts from the community
           </p>
           <Button 
             onClick={() => setShowCreatePost(true)}
@@ -37,7 +37,7 @@ const AppHome = () => {
           </Button>
         </div>
 
-        {/* Posts Feed */}
+        {/* Swipeable Posts */}
         <div className="max-w-2xl mx-auto">
           {isLoading ? (
             <div className="text-center py-12">
@@ -57,11 +57,7 @@ const AppHome = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-6">
-              {allPosts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
+            <SwipeablePostStack posts={allPosts} />
           )}
         </div>
 
