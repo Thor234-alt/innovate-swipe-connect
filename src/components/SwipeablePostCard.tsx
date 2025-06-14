@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -106,7 +105,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
         animate={controls}
-        {...(isTop ? bind() : {})}
+        {...(isTop ? { ...bind() } : {})}
         drag={false}
         whileTap={isTop ? { scale: 0.97 } : undefined}
       >
