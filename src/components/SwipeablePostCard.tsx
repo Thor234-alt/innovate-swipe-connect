@@ -13,7 +13,7 @@ interface SwipeablePostCardProps {
   onSwipeLeft?: () => void;
   onSwipeRight?: () => void;
   onSuperLike?: () => void;
-  onDelete?: (postId: string) => void;
+  onDelete?: (postId: string) => Promise<void>;
   style?: React.CSSProperties;
   isTop?: boolean;
 }
@@ -51,6 +51,12 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
 
   const isOwner = user?.id === post.user_id;
 
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      onDelete?.(post.id);
+    }
+  };
+
   return (
     <>
       <div
@@ -83,8 +89,9 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="p-1 h-auto text-destructive hover:text-destructive"
-                    onClick={() => onDelete(post.id)}
+                    className="p-1 h-auto text-destructive hover:text-destructive hover:bg-destructive/10"
+                    onClick={handleDelete}
+                    title="Delete post"
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>
