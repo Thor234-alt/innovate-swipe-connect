@@ -18,7 +18,7 @@ const PostCard: React.FC<PostCardProps> = ({
   onDelete, 
   showDeleteButton = false 
 }) => {
-  const { profile } = useProfile(post.user_id);
+  const { profile, isLoading } = useProfile(post.user_id);
   const [showComments, setShowComments] = useState(false);
 
   const formatDate = (dateString: string) => {
@@ -30,8 +30,9 @@ const PostCard: React.FC<PostCardProps> = ({
   };
 
   const getDisplayName = () => {
+    if (isLoading) return "Loading...";
     if (profile?.full_name) return profile.full_name;
-    return `User ${post.user_id.slice(0, 8)}...`;
+    return "Anonymous User";
   };
 
   const handleDelete = () => {

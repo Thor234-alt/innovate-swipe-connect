@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
 }) => {
   const [showHeartAnimation, setShowHeartAnimation] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const { profile } = useProfile(post.user_id);
+  const { profile, isLoading } = useProfile(post.user_id);
 
   // Motion/gesture setup
   const x = useMotionValue(0);
@@ -94,8 +95,9 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
   };
 
   const getDisplayName = () => {
+    if (isLoading) return "Loading...";
     if (profile?.full_name) return profile.full_name;
-    return `User ${post.user_id.slice(0, 8)}...`;
+    return "Anonymous User";
   };
 
   return (
