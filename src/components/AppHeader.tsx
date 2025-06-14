@@ -36,7 +36,7 @@ export default function AppHeader() {
       <Link to="/app" className="flex items-center gap-2 text-2xl font-black tracking-tight select-none">
         <BookOpen className="w-7 h-7 text-primary" />
         <span>Idea Tinder</span>
-        <span className="ml-2 text-xs font-semibold bg-primary/10 px-2 py-1 rounded text-primary">MVP</span>
+        {/* MVP label was here and is now removed */}
       </Link>
       <div className="flex items-center gap-2">
         {user && (
@@ -53,3 +53,4 @@ export default function AppHeader() {
     </header>
   );
 }
+

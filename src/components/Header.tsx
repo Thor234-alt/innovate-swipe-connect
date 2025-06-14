@@ -6,7 +6,7 @@ const Header = ({ onShowSaved, onShowPost }: { onShowSaved: () => void; onShowPo
     <div className="flex items-center gap-2 text-2xl font-black tracking-tight select-none">
       <BookOpen className="w-7 h-7 text-primary" />
       <span>Idea Tinder</span>
-      <span className="ml-2 text-xs font-semibold bg-primary/10 px-2 py-1 rounded text-primary">MVP</span>
+      {/* MVP label was here and is now removed */}
     </div>
     <div className="flex items-center gap-4">
       <button
@@ -29,3 +29,4 @@ const Header = ({ onShowSaved, onShowPost }: { onShowSaved: () => void; onShowPo
 );
 
 export default Header;
+
