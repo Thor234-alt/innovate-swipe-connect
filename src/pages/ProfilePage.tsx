@@ -1,7 +1,12 @@
-
+import { useState } from "react";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { usePosts } from "@/hooks/usePosts";
+import PostCard from "@/components/PostCard";
+import CreatePostModal from "@/components/CreatePostModal";
 
 // Helper to get display name sensibly
 function getDisplayName(user: any) {
@@ -19,6 +24,8 @@ function getAvatarUrl(user: any) {
 
 export default function ProfilePage() {
   const { user } = useAuthUser();
+  const { posts, isLoading } = usePosts();
+  const [showCreatePost, setShowCreatePost] = useState(false);
 
   if (!user) {
     return <div className="p-8 text-center">No user details found.</div>;
@@ -29,31 +36,78 @@ export default function ProfilePage() {
 
   return (
     <div className="flex justify-center items-start min-h-[60vh] py-12 px-2">
-      <Card className="max-w-xl w-full bg-white/90 shadow-2xl border-primary/10">
-        <CardHeader className="flex flex-row items-center gap-4 pb-0">
-          <Avatar className="w-16 h-16">
-            <AvatarImage src={avatarUrl} alt={displayName ?? "Profile"} />
-            <AvatarFallback>
-              {displayName
-                .split(" ")
-                .map((s: string) => s[0])
-                .slice(0, 2)
-                .join("")
-                .toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <CardTitle className="mb-0">{displayName}</CardTitle>
-            <div className="font-normal text-muted-foreground text-sm">Your account details</div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6 pt-4">
-          <div>
-            <span className="text-xs text-muted-foreground block">Email</span>
-            <div className="font-bold">{user.email}</div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="max-w-4xl w-full space-y-6">
+        {/* Profile Info Card */}
+        <Card className="bg-white/90 shadow-2xl border-primary/10">
+          <CardHeader className="flex flex-row items-center gap-4 pb-0">
+            <Avatar className="w-16 h-16">
+              <AvatarImage src={avatarUrl} alt={displayName ?? "Profile"} />
+              <AvatarFallback>
+                {displayName
+                  .split(" ")
+                  .map((s: string) => s[0])
+                  .slice(0, 2)
+                  .join("")
+                  .toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1">
+              <CardTitle className="mb-0">{displayName}</CardTitle>
+              <div className="font-normal text-muted-foreground text-sm">Your account details</div>
+            </div>
+            <Button 
+              onClick={() => setShowCreatePost(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              New Post
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-4">
+            <div>
+              <span className="text-xs text-muted-foreground block">Email</span>
+              <div className="font-bold">{user.email}</div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Posts Section */}
+        <Card className="bg-white/90 shadow-xl border-primary/10">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Your Posts</span>
+              <span className="text-sm font-normal text-muted-foreground">
+                {posts.length} {posts.length === 1 ? 'post' : 'posts'}
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="text-center py-8 text-muted-foreground">
+                Loading your posts...
+              </div>
+            ) : posts.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p className="mb-4">You haven't created any posts yet.</p>
+                <Button onClick={() => setShowCreatePost(true)}>
+                  Create Your First Post
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <CreatePostModal 
+          open={showCreatePost} 
+          onClose={() => setShowCreatePost(false)} 
+        />
+      </div>
     </div>
   );
 }
