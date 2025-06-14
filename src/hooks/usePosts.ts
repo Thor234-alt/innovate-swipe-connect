@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthUser } from "./useAuthUser";
 import { toast } from "./use-toast";
+import { useDemoData } from "./useDemoData";
 
 export interface Post {
   id: string;
@@ -31,11 +32,12 @@ export interface Comment {
 export function usePosts() {
   const { user } = useAuthUser();
   const queryClient = useQueryClient();
+  const { demoPostsForUser } = useDemoData();
 
   const { data: posts, isLoading } = useQuery({
     queryKey: ['user-posts', user?.id],
     queryFn: async () => {
-      if (!user?.id) return [];
+      if (!user?.id) return demoPostsForUser;
       
       const { data, error } = await supabase
         .from('posts')
@@ -52,10 +54,13 @@ export function usePosts() {
 
       if (error) throw error;
       
-      return data.map(post => ({
+      const dbPosts = data.map(post => ({
         ...post,
         analytics: post.post_analytics?.[0] || { views: 0, likes: 0, shares: 0 }
       }));
+
+      // If no posts in DB, return demo posts for better UX
+      return dbPosts.length > 0 ? dbPosts : demoPostsForUser;
     },
     enabled: !!user?.id
   });
