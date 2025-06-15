@@ -8,8 +8,7 @@ import { Post } from "@/hooks/usePosts";
 import { useProfile } from "@/hooks/useProfiles";
 import HeartAnimation from "./HeartAnimation";
 import PostCommentsModal from "./PostCommentsModal";
-import { motion, useMotionValue, useAnimation } from "framer-motion";
-import { useDrag } from "@use-gesture/react";
+import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 
 interface SwipeablePostCardProps {
   post: Post;
@@ -46,59 +45,43 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
   const [showComments, setShowComments] = useState(false);
   const { profile, isLoading } = useProfile(post.user_id);
 
-  // Motion/gesture setup
+  // Motion values for swipe animation
   const x = useMotionValue(0);
-  const controls = useAnimation();
-  const cardRef = useRef<HTMLDivElement>(null);
+  const y = useMotionValue(0);
+  const rotate = useTransform(x, [-200, 200], [-25, 25]);
+  const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0, 1, 1, 1, 0]);
 
-  const threshold = 120; // px threshold for swipe
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!isTop) return;
 
-  // useDrag returns an object with event handlers, not a function
-  const bind = useDrag(
-    ({ down, movement: [mx], velocity: [vx], direction: [dx], last }) => {
-      // Move card
-      if (!isTop) return;
-      x.set(down ? mx : 0);
+    const threshold = 100;
+    const { offset } = info;
 
-      if (last) {
-        if (mx > threshold || (vx > 0.6 && dx > 0)) {
-          // Swipe right
-          controls.start({ x: 500, opacity: 0, rotate: 12, transition: { duration: 0.35 } }).then(() => {
-            x.set(0);
-            onSwipeRight?.();
-          });
-        } else if (mx < -threshold || (vx > 0.6 && dx < 0)) {
-          // Swipe left
-          controls.start({ x: -500, opacity: 0, rotate: -12, transition: { duration: 0.35 } }).then(() => {
-            x.set(0);
-            onSwipeLeft?.();
-          });
-        } else {
-          // Restore to center
-          controls.start({ x: 0, rotate: 0, opacity: 1, transition: { duration: 0.25 } });
-        }
-      }
+    if (offset.x > threshold) {
+      // Swipe right - like
+      setShowHeartAnimation(true);
+      onSwipeRight?.();
+    } else if (offset.x < -threshold) {
+      // Swipe left - pass
+      onSwipeLeft?.();
+    } else {
+      // Return to center
+      x.set(0);
+      y.set(0);
     }
-  );
+  };
 
   const handleLike = () => {
     setShowHeartAnimation(true);
-    // animate right
-    controls.start({ x: 500, opacity: 0, rotate: 12, transition: { duration: 0.35 } }).then(() => {
-      x.set(0);
-      onSwipeRight?.();
-    });
+    onSwipeRight?.();
   };
 
   const handlePass = () => {
-    controls.start({ x: -500, opacity: 0, rotate: -12, transition: { duration: 0.35 } }).then(() => {
-      x.set(0);
-      onSwipeLeft?.();
-    });
+    onSwipeLeft?.();
   };
 
   const handleSuperLike = () => {
-    onSuperLike?.(); // Could trigger an animation if desired
+    onSuperLike?.();
   };
 
   const formatDate = (dateString: string) => {
@@ -118,16 +101,26 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
   return (
     <>
       <motion.div
-        ref={cardRef}
         className={`w-full mx-auto bg-white rounded-2xl shadow-2xl border border-border p-3 sm:p-6 pb-4 sm:pb-6 relative select-none transition-all duration-300
-        ${isTop ? "hover:shadow-3xl hover:-translate-y-0.5 z-10" : "opacity-80 scale-95 z-0"}`}
-        style={{ ...style, x, height: "440px" }}
+        ${isTop ? "hover:shadow-3xl hover:-translate-y-0.5 z-10 cursor-grab active:cursor-grabbing" : "opacity-80 scale-95 z-0 pointer-events-none"}`}
+        style={{ ...style, height: "440px" }}
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
-        animate={controls}
-        {...(isTop ? bind : {})}
-        drag={false}
-        whileTap={isTop ? { scale: 0.97 } : undefined}
+        drag={isTop ? true : false}
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragElastic={0.2}
+        onDragEnd={handleDragEnd}
+        style={{
+          x,
+          y,
+          rotate,
+          opacity,
+          ...style,
+        }}
+        whileDrag={{ scale: 1.05 }}
+        animate={isTop ? { x: 0, y: 0, scale: 1 } : { scale: 0.95 }}
+        exit={{ x: 1000, opacity: 0, rotate: 30 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <Card className="border-0 shadow-none p-0 bg-transparent h-full flex flex-col">
           <CardHeader className="p-0 pb-2 sm:pb-4 flex-shrink-0">
