@@ -103,7 +103,6 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
       <motion.div
         className={`w-full mx-auto bg-white rounded-2xl shadow-2xl border border-border p-3 sm:p-6 pb-4 sm:pb-6 relative select-none transition-all duration-300
         ${isTop ? "hover:shadow-3xl hover:-translate-y-0.5 z-10 cursor-grab active:cursor-grabbing" : "opacity-80 scale-95 z-0 pointer-events-none"}`}
-        style={{ ...style, height: "440px" }}
         tabIndex={0}
         aria-label={`Post: ${post.title}`}
         drag={isTop ? true : false}
@@ -116,6 +115,7 @@ const SwipeablePostCard: React.FC<SwipeablePostCardProps> = ({
           rotate,
           opacity,
           ...style,
+          height: "440px"
         }}
         whileDrag={{ scale: 1.05 }}
         animate={isTop ? { x: 0, y: 0, scale: 1 } : { scale: 0.95 }}
